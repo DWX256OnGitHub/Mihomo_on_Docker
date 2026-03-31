@@ -14,7 +14,12 @@ RUN apk add --no-cache \
     unzip \
     nginx \
     ca-certificates \
-    tzdata
+    tzdata && \
+    rm -rf /var/cache/apk/*
+
+# 创建非 root 用户
+RUN addgroup -g 1000 mihomo && \
+    adduser -D -u 1000 -G mihomo mihomo
 
 # 下载 Mihomo
 RUN set -eux; \
@@ -34,7 +39,8 @@ RUN set -eux; \
     wget -O /tmp/mihomo.gz "$URL"; \
     gunzip /tmp/mihomo.gz; \
     mv /tmp/mihomo /usr/local/bin/mihomo; \
-    chmod +x /usr/local/bin/mihomo
+    chmod +x /usr/local/bin/mihomo; \
+    rm -f /tmp/mihomo.gz
 
 # 下载 MetaCubeXD
 RUN set -eux; \
@@ -48,13 +54,25 @@ RUN set -eux; \
     cp -r /tmp/metacubexd-*/. /usr/share/nginx/html/; \
     rm -rf /tmp/metacubexd* /tmp/metacubexd.zip
 
-RUN mkdir -p /root/.config/mihomo /run/nginx
+RUN mkdir -p /root/.config/mihomo /run/nginx && \
+    chown -R mihomo:mihomo /root/.config/mihomo
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY entrypoint.sh /entrypoint.sh
 
 RUN chmod +x /entrypoint.sh
 
+# 设置目录权限
+RUN chown -R mihomo:mihomo /app && \
+    chown -R mihomo:mihomo /usr/share/nginx/html && \
+    chown -R mihomo:mihomo /run/nginx && \
+    chown mihomo:mihomo /entrypoint.sh
+
+USER mihomo
+
 EXPOSE 7890 7891 9090 8080
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:8080/ || exit 1
 
 ENTRYPOINT ["/entrypoint.sh"]

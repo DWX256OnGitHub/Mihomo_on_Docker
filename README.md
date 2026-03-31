@@ -1,4 +1,4 @@
-# Mihomo MetaCubeXD Docker
+# Mihomo on Docker
 
 基于 Docker 的 Mihomo 代理 + MetaCubeXD Web UI 一体化解决方案
 
@@ -98,7 +98,7 @@ docker run -d \
 
 ### 配置文件示例
 
-```yaml
+```
 # config.yaml
 mixed-port: 7890
 allow-lan: true

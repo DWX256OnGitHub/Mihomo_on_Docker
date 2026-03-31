@@ -98,7 +98,7 @@ docker run -d \
 
 ### 配置文件示例
 
-```
+```yaml
 # config.yaml
 mixed-port: 7890
 allow-lan: true
@@ -355,6 +355,19 @@ services:
 - MetaCubeXD: MIT License
 - Nginx: BSD-like License
 - Alpine Linux: MIT License
+
+---
+
+## AIGC 声明
+
+本文档及代码由 AI 助手协助完成。
+
+- **代码实现**：本项目核心代码（Dockerfile、entrypoint.sh、nginx.conf 等）主要由 GPT-5mini 生成
+- **文档编写**：部分文档内容（如 README、使用说明等）使用 AI 工具生成或优化
+- **功能验证**：所有功能和配置均经过实际测试验证
+- **信息准确性**：文档中的配置说明和使用方法已与实际代码对齐，但可能存在更新延迟，请以实际代码为准
+
+如发现文档内容有误或需要改进之处，欢迎通过 [GitHub Issues](https://github.com/DWX256OnGitHub/Mihomo_on_Docker/issues) 反馈。
 
 ---
 

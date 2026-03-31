@@ -31,9 +31,9 @@
 
 ## 快速开始
 
-### 方式一：Docker Compose
+### 方式一：Docker Compose（推荐）
 
-1. 创建 `docker-compose.yml`：
+1. 使用项目自带的 `docker-compose.yml` 文件，或创建自己的配置文件：
 
 ```yaml
 version: '3.8'
@@ -69,9 +69,25 @@ docker-compose up -d
 
 浏览器打开 `http://localhost:8080`
 
-### 方式二：Docker 命令
+### 常用命令
 
 ```bash
+# 查看日志
+docker-compose logs -f
+
+# 停止服务
+docker-compose down
+
+# 重启服务
+docker-compose restart
+
+# 重新创建容器
+docker-compose up -d --force-recreate
+```
+
+### 方式二：Docker 命令
+
+```
 docker run -d \
   --name mihomo \
   --restart unless-stopped \
@@ -98,7 +114,7 @@ docker run -d \
 
 ### 配置文件示例
 
-```yaml
+```
 # config.yaml
 mixed-port: 7890
 allow-lan: true
@@ -148,7 +164,7 @@ rules: []
 
 ### 自定义版本构建
 
-```bash
+```
 docker build \
   --build-arg MIHOMO_VERSION=v1.18.0 \
   --build-arg METACUBEXD_VERSION=v2.8.0 \
@@ -162,7 +178,7 @@ docker build \
 
 建议挂载以下目录：
 
-```yaml
+```
 volumes:
   - ./config:/config                    # 配置文件
   - ./data:/root/.config/mihomo         # 运行数据（订阅、日志等）
@@ -181,7 +197,7 @@ volumes:
 
 查看健康状态：
 
-```bash
+```
 # 查看容器健康状态
 docker inspect --format='{{.State.Health.Status}}' mihomo
 ```
@@ -213,7 +229,7 @@ netstat -tlnp | grep :8080
 
 ### 3. 代理无法连接
 
-```bash
+```
 # 测试 API 是否可访问
 curl http://localhost:9090/proxies
 
@@ -235,7 +251,7 @@ ARM v7 (armv7l) 架构需要在构建时指定。
 
 ### 5. 更新镜像
 
-```bash
+```
 # 拉取最新镜像
 docker pull ghcr.io/dwx256ongithub/mihomo-metacubexd:latest
 
@@ -252,7 +268,7 @@ docker image prune -f
 
 ### 本地构建
 
-```bash
+```
 # 构建默认版本
 docker build -t mihomo-metacubexd:latest .
 
@@ -265,7 +281,7 @@ docker build \
 
 ### 多平台构建
 
-```bash
+```
 docker buildx build \
   --platform linux/amd64,linux/arm64 \
   -t mihomo-metacubexd:latest \
@@ -295,7 +311,7 @@ docker buildx build \
 
 ### 配置认证
 
-```yaml
+```
 # config.yaml
 authentication:
   - "user1:password1"
@@ -310,7 +326,7 @@ secret: "your-secret-token"
 
 在 docker-compose.yml 中限制资源：
 
-```yaml
+```
 services:
   mihomo:
     deploy:
@@ -329,6 +345,7 @@ services:
 ```
 .
 ├── Dockerfile              # Docker 镜像定义
+├── docker-compose.yml      # Docker Compose 配置文件
 ├── entrypoint.sh           # 容器启动脚本
 ├── nginx.conf              # Nginx 配置
 ├── README.md               # 本文档
